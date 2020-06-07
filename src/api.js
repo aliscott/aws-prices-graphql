@@ -3,6 +3,8 @@ const _ = require('lodash');
 const { ApolloServer, gql } = require('apollo-server');
 const { MongoClient } = require('mongodb');
 
+const rowLimit = 1000;
+
 const typeDefs = gql`
   type PricePerUnit {
     USD: String
@@ -75,7 +77,7 @@ const resolvers = {
 
       const products = await db.collection('products').find(
         transformFilter(args.filter)
-      ).toArray();
+      ).limit(rowLimit).toArray();
 
       return products.map(p => transformProduct(p));
     },
