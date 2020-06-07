@@ -1,0 +1,18 @@
+{
+  "name": "aws-pricing-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.14.2",
+    "axios": "^0.19.2",
+    "graphql": "^15.0.0",
+    "lodash": "^4.17.15",
+    "mongodb": "^3.5.8"
+  }
+}
