@@ -82,7 +82,12 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  introspection: true,
+  playground: true,
+});
 const port = process.env.PORT || 4000;
 
 server.listen(port, '0.0.0.0').then(({ url }) => {
