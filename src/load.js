@@ -1,8 +1,7 @@
+require('dotenv').config();
 const _ = require('lodash');
 const fs = require('fs');
 const { MongoClient } = require('mongodb');
-
-const mongoDbConnectionString = 'mongodb://localhost:27017/';
 
 function flattenProduct(product) {
   return {
@@ -57,8 +56,8 @@ async function processFile(file, db) {
 }
 
 async function main() {
-  const mongoClient = await MongoClient.connect(mongoDbConnectionString, { useUnifiedTopology: true });
-  const db = mongoClient.db('awsProducts');
+  const mongoClient = await MongoClient.connect(process.env.MONGODB_URI, { useUnifiedTopology: true });
+  const db = mongoClient.db();
   db.collection('products').createIndex({ sku: 1 });
   db.collection('products').createIndex({ location: 1 });
 

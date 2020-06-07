@@ -1,8 +1,7 @@
+require('dotenv').config();
 const _ = require('lodash');
 const { ApolloServer, gql } = require('apollo-server');
 const { MongoClient } = require('mongodb');
-
-const mongoDbConnectionString = 'mongodb://localhost:27017/';
 
 const typeDefs = gql`
   type PricePerUnit {
@@ -71,8 +70,8 @@ function transformProduct(product) {
 const resolvers = {
   Query: {
     products: async (parent, args, context, info) => {
-      const mongoClient = await MongoClient.connect(mongoDbConnectionString, { useUnifiedTopology: true });
-      const db = mongoClient.db('awsProducts');
+      const mongoClient = await MongoClient.connect(process.env.MONGODB_URI, { useUnifiedTopology: true });
+      const db = mongoClient.db();
 
       const products = await db.collection('products').find(
         transformFilter(args.filter)
