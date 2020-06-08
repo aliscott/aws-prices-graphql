@@ -3,7 +3,7 @@ const _ = require('lodash');
 const { ApolloServer, gql } = require('apollo-server');
 const { MongoClient } = require('mongodb');
 
-const rowLimit = 1000;
+const rowLimit = 20;
 
 const typeDefs = gql`
   type PricePerUnit {
@@ -74,14 +74,36 @@ const resolvers = {
     products: async (parent, args, context, info) => {
       const mongoClient = await MongoClient.connect(process.env.MONGODB_URI, { useUnifiedTopology: true });
       const db = mongoClient.db();
+      console.log(transformFilter(args.filter));
 
       const products = await db.collection('products').find(
         transformFilter(args.filter)
-      ).limit(rowLimit).toArray();
+      ).toArray();
+
+      console.log('LENGTH');
+      console.log(products.length);
 
       return products.map(p => transformProduct(p));
     },
   },
+};
+
+const apolloLogger = {
+  requestDidStart(requestContext) {
+    if (requestContext.request.query.startsWith('query IntrospectionQuery')) {
+      return {};
+    }
+    console.log(`GraphQL request started:\n${requestContext.request.query}\nvariables:\n${JSON.stringify(requestContext.request.variables, null, 2)}`);
+
+    return {
+      didEncounterErrors(requestContext) {
+        console.log(`GraphQL encountered errors:\n${JSON.stringify(requestContext.errors)}`);
+      },
+      willSendResponse(requestContext) {
+        console.log(`GraphQL request completed:\n${JSON.stringify(requestContext.response.data, null, 2)}`);
+      },
+    };
+  }
 };
 
 const server = new ApolloServer({
@@ -89,6 +111,9 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
+  plugins: [
+    apolloLogger,
+  ],
 });
 const port = process.env.PORT || 4000;
 
