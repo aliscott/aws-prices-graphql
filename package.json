@@ -4,10 +4,10 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "download": "node src/download.js",
-    "load": "node src/load.js",
-    "start": "node src/api.js"
+    "downloadPrices": "node src/scripts/downloadPrices.js",
+    "loadPrices": "node src/scripts/loadPrices.js",
+    "start": "node src/api.js",
+    "lint": "eslint --ext .js --ignore-path .gitignore ."
   },
   "author": "",
   "license": "ISC",
@@ -17,10 +17,15 @@
     "apollo-link-http": "^1.5.17",
     "apollo-server": "^2.14.2",
     "axios": "^0.19.2",
-    "cross-fetch": "^3.0.4",
     "dotenv": "^8.2.0",
+    "glob": "^7.1.6",
     "graphql": "^15.0.0",
     "lodash": "^4.17.15",
     "mongodb": "^3.5.8"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.21.1"
   }
 }
