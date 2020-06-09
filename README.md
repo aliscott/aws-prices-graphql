@@ -4,6 +4,8 @@ AWS offers a [Bulk API](https://docs.aws.amazon.com/awsaccountbilling/latest/abo
 
 This project creates a GraphQL API using the data from the AWS Price List Bulk API.
 
+This project currently uses a generic GraphQL schema to represent all AWS products. Future work might move to using schemas for each distinct AWS product.
+
 ## Table of Contents
 
 * [Example requests](#example-requests)
@@ -59,7 +61,7 @@ query {
   cd aws-pricing-graphql-api
   ```
 
-2. Update `.env` to point to your MongoDB server, e.g.
+2. Add a `.env` file to point to your MongoDB server, e.g.
 
   ```
   MONGODB_URI=mongodb://localhost:27017/awsPricing
