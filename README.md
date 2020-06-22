@@ -1,4 +1,4 @@
-# AWS Price List GraphQL API
+# aws-prices-graphql: AWS Price List GraphQL API
 
 AWS offers a [Bulk API](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/using-ppslong.html), which returns large JSON files containing all price points for each service or a [Query API](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/using-pelong.html), which requires AWS credentials and an IAM user.
 
@@ -57,8 +57,8 @@ query {
 1. Clone the repo
 
   ```sh
-  git clone https://github.com/aliscott/aws-pricing-graphql-api.git
-  cd aws-pricing-graphql-api
+  git clone https://gitlab.com/aliscott/aws-prices-graphql.git
+  cd aws-prices-graphql
   ```
 
 2. Add a `.env` file to point to your MongoDB server, e.g.
@@ -105,4 +105,5 @@ You can now access the GraphQL Playground at [http://localhost:4000/graphql](htt
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
+
 [ISC](https://choosealicense.com/licenses/isc/)

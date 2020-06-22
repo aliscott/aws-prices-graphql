@@ -1,20 +1,17 @@
 {
-  "name": "aws-pricing-api",
+  "name": "aws-prices-graphql",
   "version": "1.0.0",
-  "description": "",
-  "main": "api.js",
+  "description": "GraphQL API for AWS Price List",
+  "main": "src/api.js",
   "scripts": {
     "downloadPrices": "node src/scripts/downloadPrices.js",
     "loadPrices": "node src/scripts/loadPrices.js",
     "start": "node src/api.js",
     "lint": "eslint --ext .js --ignore-path .gitignore ."
   },
-  "author": "",
+  "author": "Alistair Scott",
   "license": "ISC",
   "dependencies": {
-    "apollo-boost": "^0.4.9",
-    "apollo-cache-inmemory": "^1.6.6",
-    "apollo-link-http": "^1.5.17",
     "apollo-server": "^2.14.2",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
