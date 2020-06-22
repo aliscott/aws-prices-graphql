@@ -4,7 +4,17 @@ const { MongoClient } = require('mongodb');
 const config = require('./config');
 const apolloLogger = require('./utils/apolloLogger');
 
-const rowLimit = 1000;
+const defaultOperation = 'EQUALS';
+const operationMapping = {
+  EQUALS: '$eq',
+  REGEX: '$regex',
+};
+
+const strToRegex = (str) => {
+  const main = str.match(/\/(.+)\/.*/)[1];
+  const options = str.match(/\/.+\/(.*)/)[1];
+  return new RegExp(main, options);
+};
 
 const typeDefs = gql`
   type PricePerUnit {
@@ -42,9 +52,15 @@ const typeDefs = gql`
     reservedPricing: [Pricing]
   }
 
+  enum Operation {
+    EQUALS
+    REGEX
+  }
+
   input AttributeFilter {
     key: String!
     value: String
+    operation: Operation
   }
 
   input ProductFilter {
@@ -57,7 +73,19 @@ const typeDefs = gql`
 `;
 
 function transformFilter(productFilter) {
-  return Object.fromEntries(productFilter.attributes.map((a) => [a.key, a.value]));
+  const filters = {};
+  productFilter.attributes.forEach((attribute) => {
+    if (!_.has(filters, attribute.key)) {
+      filters[attribute.key] = {};
+    }
+    const operation = operationMapping[attribute.operation || defaultOperation];
+    let { value } = attribute;
+    if (operation === '$regex') {
+      value = strToRegex(value);
+    }
+    filters[attribute.key][operation] = value;
+  });
+  return filters;
 }
 
 function transformProduct(product) {
@@ -78,7 +106,9 @@ const resolvers = {
 
       const products = await db.collection('products').find(
         transformFilter(args.filter),
-      ).limit(rowLimit).toArray();
+      ).toArray();
+
+      mongoClient.close();
 
       return products.map((p) => transformProduct(p));
     },
