@@ -20,7 +20,7 @@ This project currently uses a generic GraphQL schema to represent all AWS produc
 
 ## Example requests
 
-Get all t3.micro prices in US East, this returns 30+ results. Try it yourself by pasting the query into https://aws-prices-graphql.alistair.scot/graphql. This is running on minimal infrastructure so is not guaranteed to always be available.
+Get all t3.micro prices in US East, this returns 30+ results. Try it yourself by pasting the query into [https://aws-prices-graphql.alistair.scot/graphql](https://aws-prices-graphql.alistair.scot/graphql). This is running on minimal infrastructure so is not guaranteed to always be available.
 
 ```graphql
 query {
