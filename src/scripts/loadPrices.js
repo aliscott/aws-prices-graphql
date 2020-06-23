@@ -23,48 +23,52 @@ function flattenPrice(price) {
 }
 
 async function processFile(file, db) {
-  const productData = JSON.parse(fs.readFileSync(file));
-  const promises = [];
+  try {
+    const productData = JSON.parse(fs.readFileSync(file));
+    const promises = [];
 
-  let batchUpdates = [];
-  Object.values(productData.products).forEach((product) => {
-    const flatProduct = flattenProduct(product);
+    let batchUpdates = [];
+    Object.values(productData.products).forEach((product) => {
+      const flatProduct = flattenProduct(product);
 
-    let onDemandPricing = null;
-    let reservedPricing = null;
+      let onDemandPricing = null;
+      let reservedPricing = null;
 
-    if (productData.terms.OnDemand && productData.terms.OnDemand[flatProduct.sku]) {
-      onDemandPricing = Object.values(productData.terms.OnDemand[flatProduct.sku]).map((p) => flattenPrice(p));
-    }
+      if (productData.terms.OnDemand && productData.terms.OnDemand[flatProduct.sku]) {
+        onDemandPricing = Object.values(productData.terms.OnDemand[flatProduct.sku]).map((p) => flattenPrice(p));
+      }
 
-    if (productData.terms.Reserved && productData.terms.Reserved[flatProduct.sku]) {
-      reservedPricing = Object.values(productData.terms.Reserved[flatProduct.sku]).map((p) => flattenPrice(p));
-    }
+      if (productData.terms.Reserved && productData.terms.Reserved[flatProduct.sku]) {
+        reservedPricing = Object.values(productData.terms.Reserved[flatProduct.sku]).map((p) => flattenPrice(p));
+      }
 
-    batchUpdates.push({
-      updateOne: {
-        filter: {
-          sku: flatProduct.sku,
-        },
-        update: {
-          $set: {
-            ...flatProduct,
-            onDemandPricing,
-            reservedPricing,
+      batchUpdates.push({
+        updateOne: {
+          filter: {
+            sku: flatProduct.sku,
           },
+          update: {
+            $set: {
+              ...flatProduct,
+              onDemandPricing,
+              reservedPricing,
+            },
+          },
+          upsert: true,
         },
-        upsert: true,
-      },
+      });
+
+      if (batchUpdates.length >= batchSize) {
+        promises.push(db.collection('products').bulkWrite(batchUpdates));
+        batchUpdates = [];
+      }
     });
 
-    if (batchUpdates.length >= batchSize) {
-      promises.push(db.collection('products').bulkWrite(batchUpdates));
-      batchUpdates = [];
-    }
-  });
-
-  promises.push(db.collection('products').bulkWrite(batchUpdates));
-  await Promise.all(promises);
+    promises.push(db.collection('products').bulkWrite(batchUpdates));
+    await Promise.all(promises);
+  } catch (e) {
+    console.log(`Skipping file ${file} due to error ${e}`);
+  }
 }
 
 async function main() {
