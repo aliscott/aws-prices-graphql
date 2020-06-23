@@ -20,7 +20,7 @@ This project currently uses a generic GraphQL schema to represent all AWS produc
 
 ## Example requests
 
-Get all t3.micro prices in US East:
+Get all t3.micro prices in US East, this returns 37 results.
 
 ```graphql
 query {
@@ -41,6 +41,59 @@ query {
         }
       }
     }
+  }
+}
+```
+
+Get the hourly on-demand price of a Linux EC2 t3.micro instance in US East:
+
+Request:
+
+```graphql
+query {
+  products(
+    filter: {
+      attributes: [
+        { key: "servicecode", value: "AmazonEC2" },
+        { key: "instanceType", value: "t3.micro" },
+        { key: "location", value: "US East (N. Virginia)" }
+        { key: "tenancy", value: "Shared" }
+        { key: "operatingSystem", value: "Linux"}
+        { key: "capacitystatus", value: "Used" }
+        { key: "preInstalledSw", value: "NA"}
+      ]
+    },
+  ) {
+    onDemandPricing {
+      priceDimensions {
+        pricePerUnit {
+          USD
+        }
+      }
+    }
+  }
+}
+
+Response:
+
+```json
+{
+  "data": {
+    "products": [
+      {
+        "onDemandPricing": [
+          {
+            "priceDimensions": [
+              {
+                "pricePerUnit": {
+                  "USD": "0.0104000000"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 }
 ```
