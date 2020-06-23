@@ -73,7 +73,7 @@ async function main() {
   db.collection('products').createIndex({ '$**': 1 });
 
   for (const file of glob.sync('data/*.json')) {
-    console.log(`Processing file: ${file}`);
+    config.logger.info(`Processing file: ${file}`);
     await processFile(file, db);
   }
 

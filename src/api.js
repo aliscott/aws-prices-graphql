@@ -127,5 +127,5 @@ const server = new ApolloServer({
 });
 
 server.listen(config.port, '0.0.0.0').then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+  config.logger.info(`🚀  Server ready at ${url}`);
 });
