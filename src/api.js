@@ -4,6 +4,7 @@ const { MongoClient } = require('mongodb');
 const config = require('./config');
 const apolloLogger = require('./utils/apolloLogger');
 
+const findLimit = 100;
 const defaultOperation = 'EQUALS';
 const operationMapping = {
   EQUALS: '$eq',
@@ -106,7 +107,7 @@ const resolvers = {
 
       const products = await db.collection('products').find(
         transformFilter(args.filter),
-      ).toArray();
+      ).limit(findLimit).toArray();
 
       mongoClient.close();
 
