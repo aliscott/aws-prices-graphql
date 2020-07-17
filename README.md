@@ -111,7 +111,7 @@ Response:
 1. Clone the repo
 
   ```sh
-  git clone https://gitlab.com/aliscott/aws-prices-graphql.git
+  git clone https://github.com/aliscott/aws-prices-graphql.git
   cd aws-prices-graphql
   ```
 
